@@ -1,5 +1,6 @@
 import tkinter as tk
-#lutscher
+import Data
+
 class GUI:
     def __init__(self):
         self.app = tk.Tk()
