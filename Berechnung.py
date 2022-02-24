@@ -2,13 +2,26 @@ import Data
 
 right_puncher_up = False
 right_puncher_down = False
-nr_x_elemets = (int) (Data.X_WIDTH / Data.PIXEL_SIZE)
-nr_y_elemets = (int) (Data.Y_WIDTH / Data.PIXEL_SIZE)
+newGame = False
+
+start_ball_to_left = True
+NR_X_ELEMENTS = (int) (Data.X_WIDTH / Data.PIXEL_SIZE)
+NR_Y_ELEMENTS = (int) (Data.Y_WIDTH / Data.PIXEL_SIZE)
 
 class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+
+class Vektor:
+    def __init__(self, point, dir_point):
+        self.point = point
+        self.dir_point = dir_point
+    
+    def get_points_in_line(self):
+        pass
+
 
 class Puncher:
     def __init__(self, start_x, start_y, nr_y_elements):
@@ -30,29 +43,32 @@ class Puncher:
 
 class Berechnung:
     def __init__(self):
-        start_y = (int) ((nr_y_elemets / 2) - 5)
+        start_y = (int) ((NR_Y_ELEMENTS / 2) - 5)
         self.puncher_right = Puncher(1, start_y)
-        self.puncher_left = Puncher(nr_x_elemets - 1, start_y)
+        self.puncher_left = Puncher(NR_X_ELEMENTS - 1, start_y)
+        self.arr = []
 
-    def getDataObject(self):
+    def add_point_list_to_arr(self, point_list):
+        for e in point_list:
+            self.arr[e.x][e.y] = True
+
+    def get_data_object(self):
         if right_puncher_up:
             self.puncher_right.puncher_up()
         if right_puncher_down:
             self.puncher_right.puncher_down()
-        arr = []
-        for x in range(nr_x_elemets):
-            arr.append([])
-            for y in range(nr_y_elemets):
-                arr[x].append(False)
-        for i in range(len(self.puncher_right.pixel_list)):
-            arr[self.puncher_right.pixel_list[i].x][self.puncher_right.pixel_list[i].y] = True
-        for i in range(len(self.puncher_left.pixel_list)):
-            arr[self.puncher_left.pixel_list[i].x][self.puncher_left.pixel_list[i].y] = True
-        start_middle_x = (int) (nr_x_elemets / 2)
+        for x in range(NR_X_ELEMENTS):
+            self.arr.append([])
+            for y in range(NR_Y_ELEMENTS):
+                self.arr[x].append(False)
+        self.add_point_list_to_arr(self.puncher_right.pixel_list)
+        self.add_point_list_to_arr(self.puncher_left.pixel_list)
+        start_middle_x = (int) (NR_X_ELEMENTS / 2)
         middle_points = []
-        for i in range(nr_y_elemets):
+        for i in range(NR_Y_ELEMENTS):
             if (i % 2) == 0:
                 middle_points.append(Point(start_middle_x, i))
-        for e in middle_points:
-            arr[e.x][e.y] = True
-        return arr
+        self.add_point_list_to_arr(middle_points)
+        if newGame:
+            pass
+        return self.arr
