@@ -1,10 +1,11 @@
+from contextlib import nullcontext
 import Data
 import math
 import random
 
-NR_X_ELEMENTS = (int) (Data.X_WIDTH / Data.PIXEL_SIZE)
-NR_Y_ELEMENTS = (int) (Data.Y_WIDTH / Data.PIXEL_SIZE)
-PUNCER_SIZE = NR_Y_ELEMENTS / 8
+NR_X_ELEMENTS = (int) (Data.X_WIDTH /  Data.PIXEL_SIZE)
+NR_Y_ELEMENTS = (int) (Data.Y_HEIGHT / Data.PIXEL_SIZE)
+PUNCER_SIZE = (int) (NR_Y_ELEMENTS / 8)
 
 right_puncher_up = False
 right_puncher_down = False
@@ -12,7 +13,7 @@ newGame = False
 current_ball_way = []
 current_ball_way_index = 0
 border_points = []
-ball_point = {}
+ball_point = None
 
 class Point:
     def __init__(self, x, y):
@@ -50,15 +51,14 @@ class Strecke:
             b = b1 and b2
             if not b:
                 break
-            p.append(Point(math.round(x), math.round(y)))
+            p.append(Point(round(x), round(y)))
         return p
 
 
 
 class Puncher:
-    def __init__(self, start_x, start_y, nr_y_elements):
+    def __init__(self, start_x, start_y):
         self.pixel_list = []
-        self.nr_y_elements = nr_y_elements
         for i in range(PUNCER_SIZE):
             self.pixel_list.append(Point(start_x, start_y + i))
     
@@ -68,7 +68,7 @@ class Puncher:
                 self.pixel_list[i].y = self.pixel_list[i].y - 1
 
     def puncher_down(self):
-        if self.pixel_list[0].y < self.nr_y_elements:
+        if self.pixel_list[0].y < PUNCER_SIZE:
             for i in range(len(self.pixel_list)):
                 self.pixel_list[i].y = self.pixel_list[i].y + 1
 
@@ -102,7 +102,7 @@ class Berechnung:
         b = b1 or b2
         return b
 
-    def get_data_object(self):
+    def get_data_object(self, new_game = True):
         if right_puncher_up:
             self.puncher_right.puncher_up()
         if right_puncher_down:
@@ -120,7 +120,7 @@ class Berechnung:
                 middle_points.append(Point(start_middle_x, i))
         self.add_point_list_to_arr(middle_points)
         if new_game:
-            ra = math.round(random.random())
+            ra = round(random.random())
             move_ball_to = random.choice(border_points[ra])
             rx = move_ball_to.x
             ry = move_ball_to.y
