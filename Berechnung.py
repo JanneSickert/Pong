@@ -16,6 +16,9 @@ border_points = []
 ball_point = None
 
 class Point:
+    """
+    Speichert x und y und repräsentiert somit einen Punkt.
+    """
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -32,6 +35,10 @@ class Point:
 
 
 class Strecke:
+    """
+    Eine Strecke ist ein Array von Punkten. Diese Punkte werden nach und nach angezeigt.
+    So das es so ausieht als wenn sich der Ball bewegen würde.
+    """
     def __init__(self, point, dir_point):
         self.point = point
         self.dir_point = dir_point
@@ -57,6 +64,10 @@ class Strecke:
 
 
 class Puncher:
+    """
+    Der Schläger besteht aus einem Array von Punkten. Mit dem befehl puncer_up oder down,
+    werden alle Punkte auf dem Schläger bewegt.
+    """
     def __init__(self, start_x, start_y):
         self.pixel_list = []
         for i in range(PUNCER_SIZE):
@@ -80,6 +91,10 @@ class Puncher:
 
 
 class Berechnung:
+    """
+    Hier werden alle Spielereignisse berechnet. Wie zum Beispiel der Abprall am Schläger oder an der Wand,
+    oder wenn ein Ball am Schläger vorbei geht. Zusätzlich wird die Mittelinie berechnet.
+    """
     def __init__(self):
         start_y = (int) ((NR_Y_ELEMENTS / 2) - 5)
         self.puncher_right = Puncher(1, start_y)
@@ -150,6 +165,9 @@ class Berechnung:
         current_ball_way_index += 1
         return self.arr
 
+# Hier im Konstruktor werden die Enden des Spielfelds berechnet.
+# border_points 0 und 1 sind die Enden wo der Ball abprallt.
+# 2 und 3 die Enden wo Punkte erziehlt werden können.
 for i in range(4):
     border_points.append([])
 for i in range(NR_X_ELEMENTS):
