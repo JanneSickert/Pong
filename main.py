@@ -1,7 +1,15 @@
 import GUI
 import Berechnung
+import time
 
 gui = GUI.GUI()
 berechnung = Berechnung.Berechnung()
 
-gui.repaint(berechnung.get_data_object())
+active = True
+while active:
+    matrix = berechnung.get_data_object()
+    if matrix == None:
+        active = False
+    else:
+        gui.repaint(matrix)
+    time.sleep(0.3)
