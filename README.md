@@ -1,4 +1,4 @@
 # Pong
 The Game Pong in Python
 <br>
-<a href="https://discord.gg/waSCGC5Bjy">https://discord.gg/waSCGC5Bjy</a>
+Die zwei-teile Version, die immer ein zweidimensionales Array an die GUI übergibt. Die Version ist sehr Rechenintensiv und hängt daher.
