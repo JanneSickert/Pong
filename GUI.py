@@ -11,11 +11,10 @@ class GUI:
             self.puncher_up = True
             
     def __init__(self):
-        self.app = tk()
+        self.app = tk.Tk()
         self.app.geometry(str(Data.X_WIDTH) + "x" + str(Data.Y_HEIGHT))
         self.app.title("Pong")
         self.app.bind("<KeyPress>", self.move_puncher)
-        self.app.mainloop()
         self.puncher_down = False
         self.puncher_up = False
             
@@ -52,5 +51,5 @@ class GUI:
 #                     arr[x].append(False)
 #                 else:
 #                     arr[x].append(True)
-gui = GUI()
+# gui = GUI()
 # gui.repaint(arr)

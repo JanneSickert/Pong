@@ -6,11 +6,6 @@ NR_X_ELEMENTS = (int) (Data.X_WIDTH /  Data.PIXEL_SIZE)
 NR_Y_ELEMENTS = (int) (Data.Y_HEIGHT / Data.PIXEL_SIZE)
 PUNCER_SIZE = (int) (NR_Y_ELEMENTS / 8)
 
-right_puncher_up = False
-right_puncher_down = False
-newGame = False
-current_ball_way = []
-current_ball_way_index = 0
 border_points = []
 ball_point = None
 
@@ -58,6 +53,7 @@ class Strecke:
             if not b:
                 break
             p.append(Point(round(x), round(y)))
+            i = i + 1
         return p
 
 
@@ -99,14 +95,16 @@ class Berechnung:
         self.puncher_right = Puncher(1, start_y)
         self.puncher_left = Puncher(NR_X_ELEMENTS - 1, start_y)
         self.arr = []
+        self.current_ball_way = []
+        self.current_ball_way_index = 0
 
     def add_point_list_to_arr(self, point_list):
         for e in point_list:
             self.arr[e.x][e.y] = True
 
     def have_hit_puncher(self, point):
-        b1 = self.puncher_right.is_point_on_pixel_list(current_ball_way[current_ball_way_index])
-        b2 = self.puncher_left.is_point_on_pixel_list(current_ball_way[current_ball_way_index])
+        b1 = self.puncher_right.is_point_on_pixel_list(self.current_ball_way[self.current_ball_way_index])
+        b2 = self.puncher_left.is_point_on_pixel_list(self.current_ball_way[self.current_ball_way_index])
         b = b1 or b2
         return b
 
@@ -116,7 +114,16 @@ class Berechnung:
         b = b1 or b2
         return b
 
+    def printFiled(self):
+        for e in self.arr:
+            s = ""
+            for f in e:
+                s = s + str(f)
+            print(s)
+
     def get_data_object(self, new_game = True, right_puncher_up = False, right_puncher_down = False):
+        if len(self.current_ball_way) <= self.current_ball_way_index:
+            self.current_ball_way_index = 0
         if right_puncher_up:
             self.puncher_right.puncher_up()
         if right_puncher_down:
@@ -140,28 +147,29 @@ class Berechnung:
             ry = move_ball_to.y
             middle = Point(NR_X_ELEMENTS / 2, NR_Y_ELEMENTS / 2)
             strecke = Strecke(middle, Point(rx, ry))
-            current_ball_way = strecke.get_points_in_line()
-            current_ball_way_index = 0
+            self.current_ball_way = strecke.get_points_in_line()
+            self.current_ball_way_index = 0
             new_game = False
-        if self.have_hit_puncher(current_ball_way[current_ball_way_index]):
+        if self.have_hit_puncher(self.current_ball_way[self.current_ball_way_index]):
             if rx < (NR_X_ELEMENTS / 2):
                 current_ball_way_dir = random.choices(border_points[1])
             else:
                 current_ball_way_dir = random.choices(border_points[0])
-            s = Strecke(current_ball_way[current_ball_way_index], current_ball_way_dir)
-            current_ball_way = s.get_points_in_line()
-            current_ball_way_index = 1
-        ball_point = current_ball_way[current_ball_way_index]
+            s = Strecke(self.current_ball_way[self.current_ball_way_index], current_ball_way_dir)
+            self.current_ball_way = s.get_points_in_line()
+            self.current_ball_way_index = 1
+        ball_point = self.current_ball_way[self.current_ball_way_index]
         if self.have_hit_border(ball_point):
             s = Strecke(ball_point, current_ball_way_dir.turn_around())
-            current_ball_way = s.get_points_in_line()
-            current_ball_way_index = 1
+            self.current_ball_way = s.get_points_in_line()
+            self.current_ball_way_index = 1
         self.add_point_list_to_arr([ball_point])
-        if ball_point.y > self.puncher_left.pixel_list[random.randint(PUNCER_SIZE - 1)]:
+        if ball_point.y > self.puncher_left.pixel_list[0].y:
             self.puncher_left.puncher_down()
         else:
             self.puncher_left.puncher_up()
-        current_ball_way_index += 1
+        self.current_ball_way_index += 1
+        self.printFiled()
         return self.arr
 
 # Hier im Konstruktor werden die Enden des Spielfelds berechnet.
