@@ -1,4 +1,3 @@
-from contextlib import nullcontext
 import Data
 import math
 import random
@@ -117,7 +116,7 @@ class Berechnung:
         b = b1 or b2
         return b
 
-    def get_data_object(self, new_game = True):
+    def get_data_object(self, new_game = True, right_puncher_up = False, right_puncher_down = False):
         if right_puncher_up:
             self.puncher_right.puncher_up()
         if right_puncher_down:
